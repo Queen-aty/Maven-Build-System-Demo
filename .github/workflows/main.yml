@@ -1,1 +1,43 @@
+# Compile the source code (runs: validate → compile)
 mvn compile
+
+# Run unit tests (runs: validate → compile → test)
+mvn test
+
+# Package into a jar (runs: validate → compile → test → package)
+mvn package
+
+# Full build with all checks
+mvn clean verify
+
+# Build a fat jar (all dependencies bundled in one jar)
+mvn clean package -P fatjar
+
+# Run the application (after packaging)
+java -cp target/word-frequency-analyzer-1.0-SNAPSHOT.jar:$(mvn dependency:build-classpath -q -DincludeScope=runtime -Dmdep.outputFile=/dev/stderr 2>&1) com.example.wordfreq.App
+
+# Run with fat jar (simpler — no classpath needed)
+mvn clean package -P fatjar
+java -jar target/word-frequency-analyzer-1.0-SNAPSHOT.jar
+
+# Run with a minimum-frequency threshold of 3
+java -jar target/word-frequency-analyzer-1.0-SNAPSHOT.jar 3
+
+# Show the dependency tree (transitive dependencies)
+mvn dependency:tree
+
+# Show effective POM (all inherited/default settings)
+mvn help:effective-pom
+
+# Skip tests during packaging
+mvn package -DskipTests
+
+# Run a single test class
+mvn test -Dtest=WordFrequencyAnalyzerTest
+
+# Clean build artifacts
+mvn clean
+
+# Run tests with coverage report (JaCoCo)
+mvn clean verify
+open target/site/jacoco/index.html   # View detailed coverage in browser
